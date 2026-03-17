@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسميع إنجليزي | تالتة إعدادي - ترم ثاني 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* الصفحات المخفية */
+        .page {
+            display: none;
+            padding: 30px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #764ba2;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        /* الأزرار */
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: scale(1.02);
+        }
+
+        button.secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        button.secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* حقول الإدخال */
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* كروت */
+        .card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- هنا هتتبقى بقية الصفحات في الأجزاء الجاية -->
+        <!-- الصفحة الأولى: تسجيل الدخول -->
+<div id="page1" class="page active">
+    <header>
+        <h1>📚 موقع التسميع التفاعلي</h1>
+        <h2>الصف الثالث الإعدادي - الترم الثاني 2026</h2>
+    </header>
+
+    <div class="card">
+        <h3 style="margin-bottom: 20px; color: #333;">تسجيل الدخول</h3>
+        
+        <input type="text" id="studentName" placeholder="الاسم كامل" autocomplete="off">
+        <input type="text" id="studentID" placeholder="رقم الجلوس" autocomplete="off">
+        
+        <button onclick="login()" style="width: 100%;">دخول</button>
+    </div>
+</div>
+
+<!-- الصفحة الثانية: القائمة الرئيسية -->
+<div id="page2" class="page">
+    <header>
+        <h1>أهلاً بك <span id="displayName"></span>!</h1>
+    </header>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div class="card" style="flex: 1; min-width: 200px; text-align: center; cursor: pointer;" onclick="showPage(3)">
+            <div style="font-size: 50px; margin-bottom: 15px;">📖</div>
+            <h3 style="color: #667eea;">القصة</h3>
+            <p style="color: #666; font-size: 14px;">Twenty Thousand Leagues Under the Sea</p>
+        </div>
+
+        <div class="card" style="flex: 1; min-width: 200px; text-align: center; cursor: pointer;" onclick="showUnitSelection()">
+            <div style="font-size: 50px; margin-bottom: 15px;">📚</div>
+            <h3 style="color: #667eea;">الوحدات</h3>
+            <p style="color: #666; font-size: 14px;">Units 7 - 12</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // متغيرات عامة
+    let currentUser = { name: '', id: '' };
+    let currentUnit = 7;
+    let currentLesson = 1;
+    let currentWordsList = [];
+    let currentIndex = 0;
+    let remainingWords = [];
+
+    // وظيفة تسجيل الدخول
+    function login() {
+        let name = document.getElementById('studentName').value.trim();
+        let id = document.getElementById('studentID').value.trim();
+        
+        if (name === '' || id === '') {
+            alert('الرجاء إدخال الاسم ورقم الجلوس');
+            return;
+        }
+
+        currentUser.name = name;
+        currentUser.id = id;
+        document.getElementById('displayName').textContent = name;
+        showPage(2);
+    }
+
+    // وظيفة إظهار صفحة معينة
+    function showPage(pageNumber) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        document.getElementById(`page${pageNumber}`).classList.add('active');
+    }
+
+    // وظيفة اختيار الوحدات
+    function showUnitSelection() {
+        showPage(3);
+    }
+</script>
+<!-- الصفحة الثالثة: اختيار الوحدات -->
+<div id="page3" class="page">
+    <header>
+        <h1>اختيار الوحدات</h1>
+    </header>
+
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">الوحدات المتاحة</h3>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+            <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" value="7" checked> Unit 7 - Sports
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" value="8" checked> Unit 8 - Cultures
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" value="9" checked> Unit 9 - Courage
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" value="10" checked> Unit 10 - Adaptation
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" value="11" checked> Unit 11 - Journeys
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" value="12" checked> Unit 12 - Leadership
+            </label>
+        </div>
+
+        <h3 style="margin-bottom: 15px;">نوع المحتوى</h3>
+        <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+            <label><input type="radio" name="contentType" value="words" checked> كلمات فقط</label>
+            <label><input type="radio" name="contentType" value="grammar"> جرامر فقط</label>
+            <label><input type="radio" name="contentType" value="both"> كلمات + جرامر</label>
+        </div>
+
+        <h3 style="margin-bottom: 15px;">طريقة التسميع</h3>
+        <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+            <label><input type="radio" name="method" value="ar2en" checked> عربي ← إنجليزي</label>
+            <label><input type="radio" name="method" value="en2ar"> إنجليزي ← عربي</label>
+            <label><input type="radio" name="method" value="random"> عشوائي</label>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button onclick="showPage(2)" class="secondary" style="flex: 1;">رجوع</button>
+            <button onclick="startQuiz()" style="flex: 2;">بدء التسميع</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // بدء التسميع
+    function startQuiz() {
+        // هانضيف الكلمات في الجزء الجاي
+        showPage(4);
+    }
+</script>
+<!-- الصفحة الرابعة: التسميع (بطاقة واحدة) -->
+<div id="page4" class="page">
+    <header>
+        <h1 id="quizUnitTitle">Unit 7 - Lesson 1</h1>
+    </header>
+
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 20px;" id="wordDisplay">فارس</div>
+        
+        <input type="text" id="answerInput" placeholder="اكتب الإجابة هنا..." style="text-align: center; font-size: 18px;" autocomplete="off">
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button onclick="checkAnswer()" style="flex: 1;">تحقق</button>
+            <button onclick="revealAnswer()" class="secondary" style="flex: 1;">اعرض الإجابة</button>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button onclick="prevWord()" class="secondary" style="flex: 1;">⏪ السابق</button>
+            <button onclick="nextWord()" class="secondary" style="flex: 1;">التالي ⏩</button>
+        </div>
+
+        <div id="feedback" style="font-size: 18px; margin: 15px 0; min-height: 30px;"></div>
+        
+        <div style="background: #e0e0e0; height: 10px; border-radius: 5px;">
+            <div id="progressBar" style="width: 0%; height: 100%; background: #667eea; border-radius: 5px;"></div>
+        </div>
+        <p style="margin-top: 10px;" id="progressText">0/0 كلمات</p>
+    </div>
+</div>
+
+<!-- الصفحة الخامسة: النتائج -->
+<div id="page5" class="page">
+    <header>
+        <h1>🎉 النتيجة 🎉</h1>
+    </header>
+
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 72px; margin-bottom: 20px;">📊</div>
+        
+        <div style="display: flex; justify-content: space-around; margin-bottom: 30px;">
+            <div>
+                <div style="font-size: 36px; color: #28a745;" id="correctCount">0</div>
+                <div>صحيح</div>
+            </div>
+            <div>
+                <div style="font-size: 36px; color: #dc3545;" id="wrongCount">0</div>
+                <div>خطأ</div>
+            </div>
+        </div>
+
+        <div style="background: #e0e0e0; height: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <div id="resultBar" style="width: 0%; height: 100%; background: #667eea; border-radius: 10px;"></div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button onclick="restartQuiz()" style="flex: 1;">🔄 إعادة البدء</button>
+            <button onclick="showMistakes()" class="secondary" style="flex: 1;">🔍 اكتشف الخطأ</button>
+            <button onclick="showPage(2)" class="secondary" style="flex: 1;">🏠 القائمة الرئيسية</button>
+        </div>
+    </div>
+</div>
+<!-- الصفحة السادسة: القصة -->
+<div id="page6" class="page">
+    <header>
+        <h1>📖 Twenty Thousand Leagues Under the Sea</h1>
+    </header>
+
+    <div class="card">
+        <h3 style="margin-bottom: 15px;">اختر الفصل:</h3>
+        <select id="chapterSelect" style="margin-bottom: 20px;">
+            <option value="1">Chapter 1: The Mystery of the Sea Monster</option>
+            <option value="2">Chapter 2: Captives of Captain Nemo</option>
+            <option value="3">Chapter 3: Wonders of the Deep</option>
+            <option value="4">Chapter 4: Battles and Dangers</option>
+            <option value="5">Chapter 5: Secrets of Captain Nemo</option>
+            <option value="6">Chapter 6: Escape to Freedom</option>
+        </select>
+
+        <h3 style="margin-bottom: 15px;">نوع الأسئلة:</h3>
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <label><input type="radio" name="storyType" value="words" checked> كلمات القصة</label>
+            <label><input type="radio" name="storyType" value="questions"> اختيار من متعدد</label>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button onclick="showPage(2)" class="secondary" style="flex: 1;">رجوع</button>
+            <button onclick="startStoryQuiz()" style="flex: 2;">بدء</button>
+        </div>
+    </div>
+
+    <!-- كلمات القصة للعرض -->
+    <div class="card" style="margin-top: 15px; max-height: 300px; overflow-y: auto;">
+        <h3 style="margin-bottom: 15px;">📝 كلمات الفصل:</h3>
+        <div id="storyWordsDisplay" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <div>beast: وحش</div>
+            <div>crew: طاقم</div>
+            <div>capture: يمسك</div>
+            <div>harpooner: صياد</div>
+            <div>companions: رفقاء</div>
+            <div>submarine: غواصة</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // متغيرات التسميع
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let currentMistakes = [];
+
+    function checkAnswer() {
+        let answer = document.getElementById('answerInput').value.trim().toLowerCase();
+        if (!answer) {
+            alert('الرجاء كتابة إجابة');
+            return;
+        }
+
+        // دي مؤقتة، هتتظبط مع قاعدة الكلمات
+        if (answer === 'فارس' || answer === 'knight') {
+            document.getElementById('feedback').innerHTML = '✅ إجابة صحيحة!';
+            document.getElementById('feedback').style.color = '#28a745';
+            correctAnswers++;
+        } else {
+            document.getElementById('feedback').innerHTML = '❌ إجابة خاطئة';
+            document.getElementById('feedback').style.color = '#dc3545';
+            wrongAnswers++;
+        }
+    }
+
+    function revealAnswer() {
+        document.getElementById('feedback').innerHTML = '🔍 الإجابة: knight (فارس)';
+        document.getElementById('feedback').style.color = '#667eea';
+    }
+
+    function nextWord() {
+        document.getElementById('answerInput').value = '';
+        document.getElementById('feedback').innerHTML = '';
+        // هنا هيتحرك للكلمة الجاية
+    }
+
+    function prevWord() {
+        document.getElementById('answerInput').value = '';
+        document.getElementById('feedback').innerHTML = '';
+        // هنا هيرجع للكلمة اللي فاتت
+    }
+
+    function startStoryQuiz() {
+        showPage(4);
+        document.getElementById('quizUnitTitle').innerHTML = 'القصة - Chapter ' + document.getElementById('chapterSelect').value;
+    }
+
+    function restartQuiz() {
+        correctAnswers = 0;
+        wrongAnswers = 0;
+        showPage(3);
+    }
+
+    function showMistakes() {
+        alert('هتظهر الأخطاء هنا قريبًا');
+    }
+</script>
+<script>
+    // --------------------------------------------
+    // قاعدة البيانات: كل كلمات المنهج
+    // --------------------------------------------
+    
+    // Unit 7 - Sports
+    const unit7Words = [
+        // كلمات أساسية
+        { ar: 'فارس', en: 'knight' },
+        { ar: 'معركة', en: 'battle' },
+        { ar: 'منافس', en: 'competitor' },
+        { ar: 'بطل', en: 'champion' },
+        { ar: 'شرف', en: 'honor' },
+        { ar: 'انتصار', en: 'victory' },
+        { ar: 'إعجاب', en: 'admiration' },
+        { ar: 'جائزة', en: 'award' },
+        { ar: 'الروح الرياضية', en: 'sportsmanship' },
+        { ar: 'سباق عربات', en: 'chariot race' },
+        { ar: 'مصارع', en: 'gladiator' },
+        { ar: 'مصارعة', en: 'wrestling' },
+        { ar: 'ركوب الخيل', en: 'horse riding' },
+        { ar: 'رماية', en: 'archery' },
+        { ar: 'جودو', en: 'judo' },
+        { ar: 'مبارزة', en: 'fencing' },
+        { ar: 'كريكيت', en: 'cricket' },
+        { ar: 'ميزة', en: 'advantage' },
+        { ar: 'إصابة', en: 'injury' },
+        { ar: 'يكسب', en: 'earn' },
+        { ar: 'يلهم', en: 'inspire' },
+        { ar: 'رياضيون', en: 'athletes' },
+        { ar: 'ألعاب قوى', en: 'athletics' },
+        { ar: 'أمة', en: 'nation' },
+        { ar: 'قارات', en: 'continents' },
+        { ar: 'رفع أثقال', en: 'weightlifting' },
+        { ar: 'روح', en: 'spirit' },
+        { ar: 'يمثل', en: 'represent' },
+        { ar: 'متحدة', en: 'united' },
+        { ar: 'جمباز', en: 'gymnastics' },
+        { ar: 'تفوق', en: 'excellence' },
+        { ar: 'رياضة جماعية', en: 'team sport' },
+        { ar: 'رياضة فردية', en: 'individual sport' },
+        { ar: 'منتعش', en: 'refreshed' },
+        { ar: 'مركز', en: 'focused' },
+        { ar: 'بطولة', en: 'tournament' },
+        { ar: 'نصف نهائي', en: 'semi-final' },
+        { ar: 'مسابقة', en: 'competition' },
+        { ar: 'لائق بدنيًا', en: 'fit' },
+        { ar: 'إلهام', en: 'inspiration' },
+        { ar: 'مريح', en: 'relaxing' },
+        { ar: 'حماس', en: 'excitement' },
+        { ar: 'بطولة كبرى', en: 'championship' },
+        { ar: 'يستفيد', en: 'benefit' },
+        { ar: 'سباق تتابع', en: 'relay race' }
+    ];
+
+    // Unit 8 - Cultures and traditions
+    const unit8Words = [
+        { ar: 'يعكس', en: 'reflect' },
+        { ar: 'ثقافة', en: 'culture' },
+        { ar: 'عادات', en: 'traditions' },
+        { ar: 'حكمة', en: 'wisdom' },
+        { ar: 'تناغم', en: 'harmony' },
+        { ar: 'هوية', en: 'identity' },
+        { ar: 'مراسم', en: 'ceremony' },
+        { ar: 'احتفالات', en: 'celebrations' },
+        { ar: 'كبار السن', en: 'the elderly' },
+        { ar: 'يجتمع', en: 'gather' },
+        { ar: 'مرتبط', en: 'connected' },
+        { ar: 'صبر', en: 'patience' },
+        { ar: 'موهوب', en: 'talented' },
+        { ar: 'ثقافي', en: 'cultural' },
+        { ar: 'خارج البلاد', en: 'abroad' },
+        { ar: 'يسجل', en: 'record' },
+        { ar: 'مقابلة', en: 'interview' },
+        { ar: 'مصدر', en: 'source' },
+        { ar: 'يحافظ على', en: 'preserve' },
+        { ar: 'يتجاهل', en: 'ignore' },
+        { ar: 'وليمة', en: 'feast' },
+        { ar: 'هدايا', en: 'gifts' },
+        { ar: 'موسمي', en: 'seasonal' },
+        { ar: 'سياحة', en: 'tourism' },
+        { ar: 'تحول', en: 'transformation' },
+        { ar: 'يحيي', en: 'greet' },
+        { ar: 'الروح المجتمعية', en: 'community spirit' },
+        { ar: 'عيد القيامة', en: 'Easter' },
+        { ar: 'أجنبي', en: 'foreign' },
+        { ar: 'يظهر', en: 'appear' },
+        { ar: 'مهرجانات', en: 'festivals' },
+        { ar: 'يحتفل', en: 'celebrate' },
+        { ar: 'يؤدي', en: 'perform' },
+        { ar: 'إبداع', en: 'creativity' },
+        { ar: 'ضخم', en: 'massive' },
+        { ar: 'أقارب', en: 'relatives' },
+        { ar: 'مشابه', en: 'alike' },
+        { ar: 'تماثيل جليدية', en: 'snow sculptures' },
+        { ar: 'منطقة', en: 'region' },
+        { ar: 'ضيف', en: 'guest' },
+        { ar: 'انتماء', en: 'belonging' },
+        { ar: 'وحدة', en: 'unity' },
+        { ar: 'يشكل', en: 'shape' }
+    ];
+</script>
+<script>
+    // Unit 9 - Courage and Survival
+    const unit9Words = [
+        { ar: 'صيد الكنوز', en: 'treasure hunt' },
+        { ar: 'مأوى', en: 'shelter' },
+        { ar: 'ألغاز', en: 'riddles' },
+        { ar: 'مستكشف', en: 'explorer' },
+        { ar: 'بقاء', en: 'survival' },
+        { ar: 'أسطورة', en: 'legend' },
+        { ar: 'مخفي', en: 'hidden' },
+        { ar: 'دليل', en: 'clue' },
+        { ar: 'لغز', en: 'riddle' },
+        { ar: 'شجاعة', en: 'courage' },
+        { ar: 'أبطال', en: 'heroes' },
+        { ar: 'شعبي', en: 'folk' },
+        { ar: 'قبيلة', en: 'tribe' },
+        { ar: 'يهزم', en: 'defeat' },
+        { ar: 'وفي', en: 'loyal' },
+        { ar: 'خصم', en: 'rival' },
+        { ar: 'استراتيجيات', en: 'strategies' },
+        { ar: 'حكمة', en: 'wisdom' },
+        { ar: 'عروض', en: 'performances' },
+        { ar: 'مقاتل', en: 'fighter' },
+        { ar: 'قائد', en: 'leader' },
+        { ar: 'يدافع', en: 'defend' },
+        { ar: 'غابة مطيرة', en: 'rainforest' },
+        { ar: 'مؤرخين', en: 'historians' },
+        { ar: 'معرفة', en: 'knowledge' },
+        { ar: 'مخاطر', en: 'dangers' },
+        { ar: 'فضول', en: 'curiosity' }
+    ];
+
+    // Unit 10 - Masters of Adaptation
+    const unit10Words = [
+        { ar: 'قاسٍ', en: 'harsh' },
+        { ar: 'يتكيف', en: 'adapt' },
+        { ar: 'تكيف', en: 'adaptation' },
+        { ar: 'باحث', en: 'researcher' },
+        { ar: 'أجهزة تتبع', en: 'tracking devices' },
+        { ar: 'مزعج', en: 'disturbing' },
+        { ar: 'مفترس', en: 'predator' },
+        { ar: 'فريسة', en: 'prey' },
+        { ar: 'حماية البيئة', en: 'conservation' },
+        { ar: 'خبير حياة برية', en: 'wildlife expert' },
+        { ar: 'سلوك', en: 'behavior' },
+        { ar: 'منبهر', en: 'fascinated' },
+        { ar: 'هجرة', en: 'migration' },
+        { ar: 'مرن', en: 'flexible' },
+        { ar: 'طرق', en: 'methods' },
+        { ar: 'يخزن', en: 'store' },
+        { ar: 'سلحفاة الصحراء', en: 'desert tortoise' },
+        { ar: 'نادر', en: 'scarce' },
+        { ar: 'يحدد مكان', en: 'locate' },
+        { ar: 'شديد', en: 'extreme' },
+        { ar: 'سنام الجمل', en: 'hump' },
+        { ar: 'ظروف', en: 'conditions' },
+        { ar: 'فرو سميك', en: 'thick fur' },
+        { ar: 'رموش', en: 'eyelashes' },
+        { ar: 'يلاحظ', en: 'observe' },
+        { ar: 'أنواع', en: 'species' },
+        { ar: 'القطب الشمالي', en: 'Arctic' },
+        { ar: 'برد قارس', en: 'freezing cold' },
+        { ar: 'مذهل', en: 'remarkable' },
+        { ar: 'أميال', en: 'miles' },
+        { ar: 'كثيف', en: 'thick' },
+        { ar: 'مثلج', en: 'icy' },
+        { ar: 'جلد', en: 'skin' },
+        { ar: 'مخالب', en: 'paws' },
+        { ar: 'نباتات', en: 'vegetation' },
+        { ar: 'البطريق الإمبراطور', en: 'emperor penguin' },
+        { ar: 'يفقس', en: 'hatch' },
+        { ar: 'ريش', en: 'feathers' },
+        { ar: 'موطن', en: 'habitat' },
+        { ar: 'منقرض', en: 'extinct' }
+    ];
+</script>
+<script>
+    // Unit 11 - Unforgettable Journeys
+    const unit11Words = [
+        { ar: 'يحجز', en: 'book' },
+        { ar: 'مدى الحياة', en: 'lifelong' },
+        { ar: 'غير متوقع', en: 'unexpected' },
+        { ar: 'صعب', en: 'challenging' },
+        { ar: 'رحلة سفاري', en: 'safari' },
+        { ar: 'منظر طبيعي', en: 'scenery' },
+        { ar: 'زلق', en: 'slippery' },
+        { ar: 'خلاب', en: 'breathtaking' },
+        { ar: 'لا ينسى', en: 'unforgettable' },
+        { ar: 'غطس', en: 'snorkeling' },
+        { ar: 'مسار المشي', en: 'hiking trail' },
+        { ar: 'ضيافة', en: 'hospitality' },
+        { ar: 'مقابر', en: 'tombs' },
+        { ar: 'أعمدة', en: 'columns' },
+        { ar: 'رحلة تخييم', en: 'camping trip' },
+        { ar: 'مغامرة', en: 'adventure' },
+        { ar: 'ضروري', en: 'necessary' },
+        { ar: 'صافٍ كالبلور', en: 'crystal clear' },
+        { ar: 'محرج', en: 'embarrassed' },
+        { ar: 'بطانيات', en: 'blankets' },
+        { ar: 'ساحل البحر', en: 'seaside' },
+        { ar: 'فلوكة', en: 'felucca' },
+        { ar: 'يستكشف', en: 'explore' },
+        { ar: 'بدوي', en: 'bedouin' },
+        { ar: 'يبحر', en: 'sail' },
+        { ar: 'شعاب مرجانية', en: 'coral reefs' },
+        { ar: 'سحري', en: 'magical' },
+        { ar: 'آثار', en: 'monuments' },
+        { ar: 'يلتقط', en: 'capture' },
+        { ar: 'فراعنة', en: 'pharaohs' },
+        { ar: 'كنز', en: 'treasure' },
+        { ar: 'متوهج', en: 'glowing' },
+        { ar: 'قوي', en: 'powerful' }
+    ];
+
+    // Unit 12 - Leadership and Teamwork
+    const unit12Words = [
+        { ar: 'ميزانية', en: 'budget' },
+        { ar: 'تسويق', en: 'marketing' },
+        { ar: 'حملة', en: 'campaign' },
+        { ar: 'جودة', en: 'quality' },
+        { ar: 'تراث', en: 'heritage' },
+        { ar: 'قائد', en: 'leader' },
+        { ar: 'يؤكد', en: 'emphasize' },
+        { ar: 'حضارة', en: 'civilization' },
+        { ar: 'قاضٍ', en: 'judge' },
+        { ar: 'ضخم', en: 'immense' },
+        { ar: 'ما وراء', en: 'beyond' },
+        { ar: 'ازدهار', en: 'prosperity' },
+        { ar: 'هجين', en: 'hybrid' },
+        { ar: 'مديح', en: 'praise' },
+        { ar: 'يشكل', en: 'shape' },
+        { ar: 'أسلوب', en: 'style' },
+        { ar: 'سلام', en: 'peace' },
+        { ar: 'تجارة', en: 'trade' },
+        { ar: 'ضغط', en: 'pressure' },
+        { ar: 'طريق تجاري', en: 'trade route' },
+        { ar: 'يعمل بالطاقة الشمسية', en: 'solar powered' },
+        { ar: 'يولد', en: 'generate' },
+        { ar: 'عملاء', en: 'customers' },
+        { ar: 'مرشد', en: 'guide' },
+        { ar: 'يعدل', en: 'adjust' },
+        { ar: 'صراعات', en: 'conflicts' },
+        { ar: 'صفات', en: 'qualities' },
+        { ar: 'ثقة', en: 'trust' },
+        { ar: 'تحفيز', en: 'motivation' },
+        { ar: 'تعاطف', en: 'empathy' },
+        { ar: 'ثقة بالنفس', en: 'confidence' },
+        { ar: 'هدف', en: 'purpose' },
+        { ar: 'استعداد', en: 'willingness' },
+        { ar: 'يتواصل', en: 'communicate' },
+        { ar: 'وجهات نظر', en: 'viewpoints' },
+        { ar: 'ردود فعل', en: 'feedback' },
+        { ar: 'عرض تقديمي', en: 'presentation' },
+        { ar: 'دور', en: 'role' },
+        { ar: 'خلاف', en: 'disagreement' },
+        { ar: 'يكمل', en: 'complement' },
+        { ar: 'رسمي', en: 'official' }
+    ];
+
+    // قصة Twenty Thousand Leagues Under the Sea
+    const storyWords = [
+        // Chapter 1
+        { ar: 'وحش', en: 'beast' },
+        { ar: 'مخلوق', en: 'creature' },
+        { ar: 'طاقم السفينة', en: 'crew' },
+        { ar: 'قائد', en: 'commander' },
+        { ar: 'يمسك', en: 'capture' },
+        { ar: 'وجود', en: 'existence' },
+        { ar: 'صياد بالرمح', en: 'harpooner' },
+        { ar: 'سفينة حربية', en: 'warship' },
+        { ar: 'رمح', en: 'harpoon' },
+        { ar: 'رفقاء', en: 'companions' },
+        { ar: 'غامض', en: 'mysterious' },
+        { ar: 'بيأس', en: 'desperately' },
+        { ar: 'غواصة', en: 'submarine' },
+        { ar: 'رحلة بحرية', en: 'voyage' },
+        { ar: 'بحري', en: 'marine' },
+        // Chapter 2
+        { ar: 'أسير', en: 'captive' },
+        { ar: 'سيد', en: 'master' },
+        { ar: 'قصر عائم', en: 'floating palace' },
+        { ar: 'قطع أثرية', en: 'artifacts' },
+        { ar: 'حرية', en: 'freedom' },
+        { ar: 'لآلئ مذهلة', en: 'astounding pearls' },
+        { ar: 'قيمة', en: 'value' },
+        { ar: 'فضول', en: 'curiosity' },
+        // Chapter 3
+        { ar: 'شعاب مرجانية', en: 'coral reefs' },
+        { ar: 'حطام سفن', en: 'shipwrecks' },
+        { ar: 'بدلات غوص', en: 'diving suits' },
+        { ar: 'قاع البحر', en: 'seabed' },
+        { ar: 'مدينة غارقة', en: 'sunken city' },
+        // Chapter 4
+        { ar: 'معارك', en: 'battles' },
+        { ar: 'حبار عملاق', en: 'giant squid' },
+        { ar: 'صراع', en: 'struggle' },
+        { ar: 'ظهر السفينة', en: 'deck' },
+        { ar: 'تهديدات', en: 'threats' },
+        { ar: 'فؤوس', en: 'axes' },
+        { ar: 'القطب الجنوبي', en: 'the South Pole' },
+        // Chapter 5
+        { ar: 'مصمم', en: 'determined' },
+        { ar: 'تردد', en: 'hesitation' },
+        { ar: 'مقبرة', en: 'graveyard' },
+        { ar: 'إصرار', en: 'determination' },
+        { ar: 'يؤكد', en: 'confirm' },
+        { ar: 'ثروة', en: 'wealth' },
+        // Chapter 6
+        { ar: 'مركب صغير', en: 'craft' },
+        { ar: 'مرهق', en: 'exhausted' },
+        { ar: 'شبه فاقد للوعي', en: 'half-conscious' },
+        { ar: 'ينجرف', en: 'drift' },
+        { ar: 'يصطدم', en: 'crash' },
+        { ar: 'عزلة', en: 'isolation' },
+        { ar: 'عبقرية', en: 'brilliance' },
+        { ar: 'البشرية', en: 'mankind' }
+    ];
+
+    // تجميع كل الكلمات في مصفوفة واحدة
+    const allWords = [
+        ...unit7Words,
+        ...unit8Words,
+        ...unit9Words,
+        ...unit10Words,
+        ...unit11Words,
+        ...unit12Words,
+        ...storyWords
+    ];
+
+    console.log('تم تحميل ' + allWords.length + ' كلمة');
+</script>
+        <script>
+            // --------------------------------------------
+            // وظائف التسميع المتقدمة
+            // --------------------------------------------
+            
+            // متغيرات التسميع
+            let currentWords = [];
+            let currentWordIndex = 0;
+            let userAnswers = [];
+            let quizMode = 'ar2en'; // ar2en, en2ar, random
+            let checkCount = 0;
+            const MAX_CHECKS = 10;
+
+            // بدء التسميع من الوحدات
+            function startQuiz() {
+                // جمع الكلمات من الوحدات المحددة
+                currentWords = [];
+                let selectedUnits = [];
+                
+                document.querySelectorAll('#page3 input[type="checkbox"]:checked').forEach(cb => {
+                    selectedUnits.push(parseInt(cb.value));
+                });
+                
+                // إضافة كلمات الوحدات المحددة
+                selectedUnits.forEach(unit => {
+                    switch(unit) {
+                        case 7: currentWords.push(...unit7Words); break;
+                        case 8: currentWords.push(...unit8Words); break;
+                        case 9: currentWords.push(...unit9Words); break;
+                        case 10: currentWords.push(...unit10Words); break;
+                        case 11: currentWords.push(...unit11Words); break;
+                        case 12: currentWords.push(...unit12Words); break;
+                    }
+                });
+                
+                // تحديد طريقة التسميع
+                quizMode = document.querySelector('input[name="method"]:checked').value;
+                
+                // خلط الكلمات
+                currentWords = shuffleArray(currentWords);
+                
+                // تجهيز المتغيرات
+                currentWordIndex = 0;
+                userAnswers = new Array(currentWords.length).fill('');
+                checkCount = 0;
+                
+                // تحديث العرض
+                document.getElementById('quizUnitTitle').innerHTML = `تسميع ${currentWords.length} كلمة`;
+                updateQuizDisplay();
+                showPage(4);
+            }
+
+            // بدء تسميع القصة
+            function startStoryQuiz() {
+                let chapter = document.getElementById('chapterSelect').value;
+                let type = document.querySelector('input[name="storyType"]:checked').value;
+                
+                // تصفية كلمات القصة حسب الفصل (مبسط حالياً)
+                currentWords = storyWords.filter((word, index) => {
+                    return index < 15; // مؤقت: أول 15 كلمة
+                });
+                
+                quizMode = document.querySelector('input[name="method"]:checked')?.value || 'ar2en';
+                currentWords = shuffleArray(currentWords);
+                currentWordIndex = 0;
+                userAnswers = new Array(currentWords.length).fill('');
+                
+                document.getElementById('quizUnitTitle').innerHTML = `القصة - Chapter ${chapter}`;
+                updateQuizDisplay();
+                showPage(4);
+            }
+
+            // تحديث عرض التسميع
+            function updateQuizDisplay() {
+                if (currentWords.length === 0) return;
+                
+                let word = currentWords[currentWordIndex];
+                
+                if (quizMode === 'ar2en') {
+                    document.getElementById('wordDisplay').innerHTML = word.ar;
+                } else if (quizMode === 'en2ar') {
+                    document.getElementById('wordDisplay').innerHTML = word.en;
+                } else {
+                    // عشوائي: مرة كده ومرة كده
+                    let random = Math.random() > 0.5;
+                    document.getElementById('wordDisplay').innerHTML = random ? word.ar : word.en;
+                }
+                
+                document.getElementById('answerInput').value = userAnswers[currentWordIndex] || '';
+                document.getElementById('feedback').innerHTML = '';
+                
+                let progress = ((currentWordIndex + 1) / currentWords.length) * 100;
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressText').innerHTML = `${currentWordIndex + 1}/${currentWords.length} كلمات`;
+            }
+
+            // التحقق من الإجابة
+            function checkAnswer() {
+                let answer = document.getElementById('answerInput').value.trim().toLowerCase();
+                let word = currentWords[currentWordIndex];
+                let correctAnswer = (quizMode === 'ar2en') ? word.en.toLowerCase() : word.ar.toLowerCase();
+                
+                userAnswers[currentWordIndex] = answer;
+                
+                if (answer === correctAnswer) {
+                    document.getElementById('feedback').innerHTML = '✅ إجابة صحيحة!';
+                    document.getElementById('feedback').style.color = '#28a745';
+                } else {
+                    document.getElementById('feedback').innerHTML = '❌ إجابة خاطئة';
+                    document.getElementById('feedback').style.color = '#dc3545';
+                    checkCount++;
+                }
+            }
+
+            // إظهار الإجابة الصحيحة
+            function revealAnswer() {
+                let word = currentWords[currentWordIndex];
+                let correctAnswer = (quizMode === 'ar2en') ? word.en : word.ar;
+                document.getElementById('feedback').innerHTML = `🔍 الإجابة: ${correctAnswer}`;
+                document.getElementById('feedback').style.color = '#667eea';
+            }
+
+            // الكلمة التالية
+            function nextWord() {
+                if (currentWordIndex < currentWords.length - 1) {
+                    currentWordIndex++;
+                    updateQuizDisplay();
+                } else {
+                    // نهاية التسميع - عرض النتائج
+                    showResults();
+                }
+            }
+
+            // الكلمة السابقة
+            function prevWord() {
+                if (currentWordIndex > 0) {
+                    currentWordIndex--;
+                    updateQuizDisplay();
+                }
+            }
+
+            // عرض النتائج
+            function showResults() {
+                let correct = 0;
+                let wrong = 0;
+                
+                currentWords.forEach((word, index) => {
+                    let userAnswer = userAnswers[index] || '';
+                    let correctAnswer = (quizMode === 'ar2en') ? word.en.toLowerCase() : word.ar.toLowerCase();
+                    
+                    if (userAnswer === correctAnswer) {
+                        correct++;
+                    } else {
+                        wrong++;
+                    }
+                });
+                
+                document.getElementById('correctCount').innerHTML = correct;
+                document.getElementById('wrongCount').innerHTML = wrong;
+                
+                let percentage = (correct / currentWords.length) * 100;
+                document.getElementById('resultBar').style.width = percentage + '%';
+                
+                showPage(5);
+            }
+
+            // إعادة تشغيل التسميع
+            function restartQuiz() {
+                currentWordIndex = 0;
+                userAnswers = new Array(currentWords.length).fill('');
+                checkCount = 0;
+                updateQuizDisplay();
+                showPage(4);
+            }
+
+            // إظهار الأخطاء
+            function showMistakes() {
+                let mistakes = [];
+                currentWords.forEach((word, index) => {
+                    let userAnswer = userAnswers[index] || '';
+                    let correctAnswer = (quizMode === 'ar2en') ? word.en : word.ar;
+                    
+                    if (userAnswer.toLowerCase() !== correctAnswer.toLowerCase()) {
+                        mistakes.push(`${word.ar} ← ${word.en} (إجابتك: ${userAnswer || 'فارغ'})`);
+                    }
+                });
+                
+                if (mistakes.length === 0) {
+                    alert('🎉 مبروك! كل إجاباتك صحيحة');
+                } else {
+                    alert('❌ الأخطاء:\n' + mistakes.join('\n'));
+                }
+            }
+
+            // خلط المصفوفة
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // تحديث عرض كلمات القصة حسب الفصل
+            document.getElementById('chapterSelect')?.addEventListener('change', function(e) {
+                let chapter = e.target.value;
+                let displayDiv = document.getElementById('storyWordsDisplay');
+                
+                if (displayDiv) {
+                    // عرض كلمات الفصل المختار (مبسط)
+                    displayDiv.innerHTML = '';
+                    storyWords.slice(0, 10).forEach(word => {
+                        displayDiv.innerHTML += `<div>${word.ar}: ${word.en}</div>`;
+                    });
+                }
+            });
+
+            console.log('✅ الموقع جاهز للعمل');
+        </script>
+        <script>
+    // --------------------------------------------
+    // تحسينات وإضافات نهائية
+    // --------------------------------------------
+    
+    // حفظ التقدم في localStorage
+    function saveProgress() {
+        const progress = {
+            user: currentUser,
+            lastUnit: currentUnit,
+            lastWords: currentWords.length,
+            date: new Date().toLocaleString()
+        };
+        localStorage.setItem('quizProgress', JSON.stringify(progress));
+    }
+
+    // تحميل التقدم المحفوظ
+    function loadProgress() {
+        const saved = localStorage.getItem('quizProgress');
+        if (saved) {
+            const progress = JSON.parse(saved);
+            if (progress.user.name) {
+                currentUser = progress.user;
+                document.getElementById('displayName').textContent = currentUser.name;
+                console.log('تم استعادة التقدم لـ ' + currentUser.name);
+            }
+        }
+    }
+
+    // تفعيل Enter في حقل الإجابة
+    document.getElementById('answerInput')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    // تفعيل Enter في صفحة تسجيل الدخول
+    document.getElementById('studentID')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            login();
+        }
+    });
+
+    // عرض إحصائيات سريعة في الكونسول
+    function showStats() {
+        console.log('📊 إحصائيات الموقع:');
+        console.log('- عدد كلمات Unit 7:', unit7Words.length);
+        console.log('- عدد كلمات Unit 8:', unit8Words.length);
+        console.log('- عدد كلمات Unit 9:', unit9Words.length);
+        console.log('- عدد كلمات Unit 10:', unit10Words.length);
+        console.log('- عدد كلمات Unit 11:', unit11Words.length);
+        console.log('- عدد كلمات Unit 12:', unit12Words.length);
+        console.log('- عدد كلمات القصة:', storyWords.length);
+        console.log('- الإجمالي:', allWords.length, 'كلمة');
+    }
+
+    // استدعاء الإحصائيات عند التحميل
+    window.addEventListener('load', function() {
+        loadProgress();
+        showStats();
+        
+        // تجهيز عرض كلمات القصة
+        const chapterSelect = document.getElementById('chapterSelect');
+        if (chapterSelect) {
+            chapterSelect.value = '1';
+            // عرض كلمات الفصل الأول افتراضياً
+            const displayDiv = document.getElementById('storyWordsDisplay');
+            if (displayDiv) {
+                displayDiv.innerHTML = '';
+                const chapter1Words = storyWords.slice(0, 10);
+                chapter1Words.forEach(word => {
+                    displayDiv.innerHTML += `<div style="background:#f0f0f0; padding:5px; border-radius:5px;">${word.ar}: <strong>${word.en}</strong></div>`;
+                });
+            }
+        }
+    });
+
+    // وظيفة البحث السريع عن كلمة
+    function searchWord(term) {
+        const results = allWords.filter(word => 
+            word.ar.includes(term) || word.en.includes(term.toLowerCase())
+        );
+        console.log(`🔍 نتائج البحث عن "${term}":`, results);
+        return results;
+    }
+
+    // نصائح عشوائية للتحفيز
+    const tips = [
+        '💪 استمر في التمرين، النجاح يحتاج صبر',
+        '🎯 حدد هدفك اليومي والتزم به',
+        '📝 راجع الكلمات اللي غلطت فيها أكتر',
+        '🌟 كل كلمة جديدة تقربك من التفوق',
+        '⚡ الممارسة اليومية تصنع الفارق'
+    ];
+
+    function showRandomTip() {
+        const randomIndex = Math.floor(Math.random() * tips.length);
+        const tipDiv = document.createElement('div');
+        tipDiv.style.cssText = 'position:fixed; bottom:10px; left:10px; background:#764ba2; color:white; padding:10px; border-radius:10px; font-size:14px; z-index:9999;';
+        tipDiv.innerHTML = tips[randomIndex];
+        document.body.appendChild(tipDiv);
+        setTimeout(() => tipDiv.remove(), 5000);
+    }
+
+    // تشغيل نصائح عشوائية كل دقيقة
+    setInterval(showRandomTip, 60000);
+
+    // التبديل بين الوضع الليلي والنهاري
+    let isDarkMode = false;
+    function toggleTheme() {
+        if (isDarkMode) {
+            document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        } else {
+            document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #3498db 100%)';
+        }
+        isDarkMode = !isDarkMode;
+    }
+
+    // إضافة زر الوضع الليلي
+    const themeButton = document.createElement('button');
+    themeButton.innerHTML = '🌓';
+    themeButton.style.cssText = 'position:fixed; top:10px; left:10px; width:40px; height:40px; border-radius:50%; background:white; border:2px solid #667eea; cursor:pointer; z-index:9999;';
+    themeButton.onclick = toggleTheme;
+    document.body.appendChild(themeButton);
+
+    // عرض وقت الجلسة
+    const sessionStart = new Date();
+    function showSessionTime() {
+        const now = new Date();
+        const diff = Math.floor((now - sessionStart) / 1000 / 60);
+        console.log(`⏱️ مدة الجلسة: ${diff} دقيقة`);
+    }
+    setInterval(showSessionTime, 30000);
+
+    // مشاركة النتيجة (نسخ للنص)
+    function shareResult() {
+        const correct = document.getElementById('correctCount').innerHTML;
+        const wrong = document.getElementById('wrongCount').innerHTML;
+        const text = `🎓 نتيجة التسميع:\n✅ صحيح: ${correct}\n❌ خطأ: ${wrong}\n📚 موقع الصف الثالث الإعدادي`;
+        
+        // نسخ إلى الحافظة
+        navigator.clipboard?.writeText(text).then(() => {
+            alert('📋 تم نسخ النتيجة، تقدر تشاركها مع أصحابك');
+        });
+    }
+
+    // إضافة زر مشاركة في صفحة النتائج
+    const shareButton = document.createElement('button');
+    shareButton.innerHTML = '📤 مشاركة';
+    shareButton.style.cssText = 'margin-top:10px; background:#28a745;';
+    shareButton.onclick = shareResult;
+    
+    // إضافة الزر لصفحة النتائج عند ظهورها
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.target.id === 'page5' && mutation.target.classList.contains('active')) {
+                const card = document.querySelector('#page5 .card');
+                if (card && !document.getElementById('shareBtn')) {
+                    shareButton.id = 'shareBtn';
+                    card.appendChild(shareButton);
+                }
+            }
+        });
+    });
+    
+    observer.observe(document.body, { attributes: true, subtree: true });
+
+    console.log('🎯 جميع التحسينات تم تفعيلها بنجاح');
+    console.log('📌 الموقع جاهز للاستخدام المكثف');
+</script>
+<!-- الصفحة السابعة: التسميع بالطريقة المتقدمة (10 كلمات) -->
+<div id="page7" class="page">
+    <header>
+        <h1 id="advancedQuizTitle">📝 تسميع 10 كلمات</h1>
+    </header>
+
+    <div class="card" style="max-height: 500px; overflow-y: auto;">
+        <div id="tenWordsGrid" style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px;">
+            <!-- هنا هتظهر الكلمات العشر -->
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <button onclick="advancedPrevPage()" class="secondary" id="prevPageBtn" style="flex: 1;">⏪ الصفحة السابقة</button>
+            <button onclick="advancedCheckAnswers()" id="checkBtn" style="flex: 1;">🔍 تحقق</button>
+            <button onclick="advancedNextPage()" class="secondary" id="nextPageBtn" style="flex: 1;">الصفحة التالية ⏩</button>
+            <button onclick="advancedSubmit()" id="submitBtn" style="flex: 2; background: #28a745;">📨 سلم الإجابات</button>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center;" id="advancedFeedback"></div>
+        
+        <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+            <button onclick="showIdeaButton()" id="ideaBtn" class="secondary" style="display: none; background: #ffc107; color: black;">🤷 لا أعرف الإجابة - سلم وأخبرني الصواب</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------
+    // نظام التسميع المتقدم (10 كلمات)
+    // --------------------------------------------
+    
+    // متغيرات النظام المتقدم
+    let advancedWords = [];
+    let currentPage = 0;
+    let wordsPerPage = 10;
+    let advancedAnswers = [];
+    let advancedCheckCount = 0;
+    let advancedMistakes = [];
+    let advancedCorrect = [];
+    const MAX_ADVANCED_CHECKS = 10;
+
+    // بدء التسميع المتقدم
+    function startAdvancedQuiz() {
+        // جمع الكلمات (نفس الطريقة العادية)
+        advancedWords = [];
+        let selectedUnits = [];
+        
+        document.querySelectorAll('#page3 input[type="checkbox"]:checked').forEach(cb => {
+            selectedUnits.push(parseInt(cb.value));
+        });
+        
+        selectedUnits.forEach(unit => {
+            switch(unit) {
+                case 7: advancedWords.push(...unit7Words); break;
+                case 8: advancedWords.push(...unit8Words); break;
+                case 9: advancedWords.push(...unit9Words); break;
+                case 10: advancedWords.push(...unit10Words); break;
+                case 11: advancedWords.push(...unit11Words); break;
+                case 12: advancedWords.push(...unit12Words); break;
+            }
+        });
+        
+        // خلط الكلمات
+        advancedWords = shuffleArray(advancedWords);
+        
+        // تجهيز المتغيرات
+        currentPage = 0;
+        advancedAnswers = new Array(advancedWords.length).fill('');
+        advancedCheckCount = 0;
+        advancedMistakes = [];
+        advancedCorrect = new Array(advancedWords.length).fill(false);
+        
+        // تحديث العنوان
+        document.getElementById('advancedQuizTitle').innerHTML = `📝 تسميع ${advancedWords.length} كلمة`;
+        
+        // عرض الصفحة الأولى
+        displayAdvancedPage();
+        showPage(7);
+    }
+
+    // عرض صفحة من الكلمات
+    function displayAdvancedPage() {
+        const start = currentPage * wordsPerPage;
+        const end = Math.min(start + wordsPerPage, advancedWords.length);
+        const grid = document.getElementById('tenWordsGrid');
+        
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        for (let i = start; i < end; i++) {
+            const word = advancedWords[i];
+            const wordDiv = document.createElement('div');
+            wordDiv.style.cssText = 'background: white; padding: 15px; border-radius: 10px; border: 2px solid #e0e0e0;';
+            
+            wordDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div style="min-width: 100px; font-size: 18px; font-weight: bold; color: #764ba2;">
+                        ${word.ar}
+                    </div>
+                    <div style="flex: 1;">
+                        <input type="text" id="adv_${i}" value="${advancedAnswers[i] || ''}" 
+                               placeholder="اكتب الإجابة..." 
+                               style="width: 100%; padding: 10px; border: 2px solid ${advancedCorrect[i] ? '#28a745' : '#e0e0e0'}; border-radius: 8px;"
+                               onchange="updateAdvancedAnswer(${i}, this.value)">
+                    </div>
+                    <div style="min-width: 30px; text-align: center;" id="adv_icon_${i}">
+                        ${advancedCorrect[i] ? '✅' : ''}
+                    </div>
+                </div>
+            `;
+            
+            grid.appendChild(wordDiv);
+        }
+        
+        // تحديث أزرار التنقل
+        document.getElementById('prevPageBtn').style.display = currentPage > 0 ? 'block' : 'none';
+        document.getElementById('nextPageBtn').style.display = end < advancedWords.length ? 'block' : 'none';
+        
+        // تحديث حالة أزرار التحقق والتسليم
+        updateAdvancedButtons();
+    }
+
+    // تحديث إجابة
+    function updateAdvancedAnswer(index, value) {
+        advancedAnswers[index] = value;
+        advancedCorrect[index] = false; // إعادة تعيين علامة الصحة
+    }
+
+    // التحقق من الإجابات في الصفحة الحالية
+    function advancedCheckAnswers() {
+        const start = currentPage * wordsPerPage;
+        const end = Math.min(start + wordsPerPage, advancedWords.length);
+        let hasErrors = false;
+        
+        for (let i = start; i < end; i++) {
+            const word = advancedWords[i];
+            const userAnswer = advancedAnswers[i] || '';
+            const correctAnswer = word.en.toLowerCase();
+            
+            if (userAnswer.toLowerCase() === correctAnswer) {
+                advancedCorrect[i] = true;
+                document.getElementById(`adv_icon_${i}`).innerHTML = '✅';
+                document.getElementById(`adv_${i}`).style.borderColor = '#28a745';
+            } else {
+                hasErrors = true;
+                document.getElementById(`adv_icon_${i}`).innerHTML = '❌';
+                document.getElementById(`adv_${i}`).style.borderColor = '#dc3545';
+            }
+        }
+        
+        advancedCheckCount++;
+        
+        if (!hasErrors) {
+            document.getElementById('advancedFeedback').innerHTML = '✅ جميع الإجابات صحيحة! يمكنك التسليم';
+            document.getElementById('advancedFeedback').style.color = '#28a745';
+        } else {
+            document.getElementById('advancedFeedback').innerHTML = '❌ يوجد أخطاء، حاول مرة أخرى';
+            document.getElementById('advancedFeedback').style.color = '#dc3545';
+        }
+        
+        // إظهار زر المساعدة بعد 10 محاولات
+        if (advancedCheckCount >= MAX_ADVANCED_CHECKS) {
+            document.getElementById('ideaBtn').style.display = 'block';
+        }
+        
+        updateAdvancedButtons();
+    }
+
+    // تحديث حالة الأزرار
+    function updateAdvancedButtons() {
+        const allCorrect = advancedCorrect.every(val => val === true);
+        const submitBtn = document.getElementById('submitBtn');
+        const checkBtn = document.getElementById('checkBtn');
+        const ideaBtn = document.getElementById('ideaBtn');
+        
+        if (allCorrect) {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+        }
+        
+        if (ideaBtn.style.display === 'block') {
+            submitBtn.disabled = false;
+            checkBtn.style.display = 'none';
+        }
+    }
+
+    // إظهار زر المساعدة
+    function showIdeaButton() {
+        document.getElementById('ideaBtn').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('advancedFeedback').innerHTML = '🤷 تم التجاوز، يمكنك التسليم لرؤية الإجابات الصحيحة';
+    }
+
+    // تسليم الإجابات
+    function advancedSubmit() {
+        let correct = 0;
+        let wrong = 0;
+        advancedMistakes = [];
+        
+        for (let i = 0; i < advancedWords.length; i++) {
+            const word = advancedWords[i];
+            const userAnswer = advancedAnswers[i] || '';
+            const correctAnswer = word.en.toLowerCase();
+            
+            if (userAnswer.toLowerCase() === correctAnswer) {
+                correct++;
+            } else {
+                wrong++;
+                advancedMistakes.push({
+                    index: i,
+                    word: word,
+                    userAnswer: userAnswer || '(فارغ)'
+                });
+            }
+        }
+        
+        // عرض النتائج
+        document.getElementById('correctCount').innerHTML = correct;
+        document.getElementById('wrongCount').innerHTML = wrong;
+        let percentage = (correct / advancedWords.length) * 100;
+        document.getElementById('resultBar').style.width = percentage + '%';
+        
+        // تخزين الأخطاء للعرض
+        window.currentMistakes = advancedMistakes;
+        
+        showPage(5);
+    }
+
+    // الصفحة التالية
+    function advancedNextPage() {
+        if ((currentPage + 1) * wordsPerPage < advancedWords.length) {
+            currentPage++;
+            displayAdvancedPage();
+        }
+    }
+
+    // الصفحة السابقة
+    function advancedPrevPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            displayAdvancedPage();
+        }
+    }
+
+    // إضافة زر في صفحة الاختيارات لاختيار طريقة التسميع
+    function addMethodChoice() {
+        const card = document.querySelector('#page3 .card');
+        if (card) {
+            const methodDiv = document.createElement('div');
+            methodDiv.innerHTML = `
+                <h3 style="margin: 20px 0 15px;">طريقة العرض</h3>
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <label><input type="radio" name="viewMethod" value="simple" checked> بطاقة واحدة (تقليدي)</label>
+                    <label><input type="radio" name="viewMethod" value="advanced"> 10 كلمات معاً (متقدم)</label>
+                </div>
+            `;
+            card.insertBefore(methodDiv, card.lastElementChild);
+        }
+    }
+
+    // تعديل وظيفة startQuiz لتدعم الطريقتين
+    const originalStartQuiz = startQuiz;
+    window.startQuiz = function() {
+        const viewMethod = document.querySelector('input[name="viewMethod"]:checked')?.value || 'simple';
+        
+        if (viewMethod === 'advanced') {
+            startAdvancedQuiz();
+        } else {
+            originalStartQuiz();
+        }
+    };
+
+    // إضافة خيار الطريقة عند تحميل الصفحة
+    window.addEventListener('load', function() {
+        setTimeout(addMethodChoice, 100);
+    });
+</script>
+        <!-- الصفحة الثامنة: اكتشف الخطأ -->
+        <div id="page8" class="page">
+            <header>
+                <h1>🔍 اكتشف الخطأ</h1>
+            </header>
+
+            <div class="card">
+                <div style="margin-bottom: 20px; text-align: center;" id="mistakeSummary">
+                    <h3>عدد الأخطاء: <span id="mistakeCount">0</span></h3>
+                </div>
+
+                <div id="mistakesList" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+                    <!-- هنا هتظهر الأخطاء -->
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="reviewMistakes()" style="flex: 1; background: #28a745;">📝 مراجعة الأخطاء</button>
+                    <button onclick="showPage(5)" class="secondary" style="flex: 1;">🔙 العودة للنتائج</button>
+                    <button onclick="showPage(2)" class="secondary" style="flex: 1;">🏠 القائمة الرئيسية</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // --------------------------------------------
+            // نظام اكتشف الخطأ المتقدم
+            // --------------------------------------------
+            
+            // عرض الأخطاء
+            function showMistakes() {
+                const mistakesList = document.getElementById('mistakesList');
+                const mistakeCount = document.getElementById('mistakeCount');
+                
+                if (!mistakesList) return;
+                
+                mistakesList.innerHTML = '';
+                
+                if (!window.currentMistakes || window.currentMistakes.length === 0) {
+                    mistakesList.innerHTML = '<div style="text-align: center; padding: 30px; color: #28a745;">🎉 مبروك! لا توجد أخطاء</div>';
+                    mistakeCount.innerHTML = '0';
+                } else {
+                    mistakeCount.innerHTML = window.currentMistakes.length;
+                    
+                    window.currentMistakes.forEach((mistake, index) => {
+                        const mistakeDiv = document.createElement('div');
+                        mistakeDiv.style.cssText = 'background: #fff3f3; border: 2px solid #dc3545; border-radius: 10px; padding: 15px; margin-bottom: 10px;';
+                        
+                        mistakeDiv.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                <div>
+                                    <strong style="font-size: 18px; color: #764ba2;">${mistake.word.ar}</strong>
+                                    <span style="color: #666; margin: 0 10px;">←</span>
+                                    <strong style="font-size: 18px; color: #28a745;">${mistake.word.en}</strong>
+                                </div>
+                                <div style="color: #dc3545; margin-top: 5px;">
+                                    إجابتك: "${mistake.userAnswer}"
+                                </div>
+                            </div>
+                        `;
+                        
+                        mistakesList.appendChild(mistakeDiv);
+                    });
+                }
+                
+                showPage(8);
+            }
+
+            // مراجعة الأخطاء فقط
+            function reviewMistakes() {
+                if (!window.currentMistakes || window.currentMistakes.length === 0) {
+                    alert('🎉 مبروك! لا توجد أخطاء للمراجعة');
+                    return;
+                }
+                
+                // إنشاء قائمة بالأخطاء فقط
+                const mistakeWords = window.currentMistakes.map(m => m.word);
+                
+                // استخدام النظام العادي للمراجعة
+                currentWords = mistakeWords;
+                currentWordIndex = 0;
+                userAnswers = new Array(currentWords.length).fill('');
+                
+                document.getElementById('quizUnitTitle').innerHTML = `مراجعة ${currentWords.length} خطأ`;
+                updateQuizDisplay();
+                showPage(4);
+            }
+
+            // --------------------------------------------
+            // نظام الحفظ التلقائي
+            // --------------------------------------------
+            
+            // حفظ جميع البيانات
+            function saveAllData() {
+                const allData = {
+                    user: currentUser,
+                    progress: {
+                        lastUnit: currentUnit,
+                        lastLesson: currentLesson,
+                        totalWords: allWords.length
+                    },
+                    stats: {
+                        totalQuizzes: localStorage.getItem('totalQuizzes') || 0,
+                        totalCorrect: localStorage.getItem('totalCorrect') || 0,
+                        totalWrong: localStorage.getItem('totalWrong') || 0
+                    },
+                    lastVisit: new Date().toISOString()
+                };
+                
+                localStorage.setItem('allQuizData', JSON.stringify(allData));
+            }
+
+            // تحديث الإحصائيات بعد كل تسميع
+            function updateStats(correct, wrong) {
+                let totalQuizzes = parseInt(localStorage.getItem('totalQuizzes') || '0');
+                let totalCorrect = parseInt(localStorage.getItem('totalCorrect') || '0');
+                let totalWrong = parseInt(localStorage.getItem('totalWrong') || '0');
+                
+                totalQuizzes++;
+                totalCorrect += correct;
+                totalWrong += wrong;
+                
+                localStorage.setItem('totalQuizzes', totalQuizzes);
+                localStorage.setItem('totalCorrect', totalCorrect);
+                localStorage.setItem('totalWrong', totalWrong);
+                
+                saveAllData();
+            }
+
+            // تعديل advancedSubmit لتحديث الإحصائيات
+            const originalAdvancedSubmit = advancedSubmit;
+            window.advancedSubmit = function() {
+                let correct = 0;
+                let wrong = 0;
+                advancedMistakes = [];
+                
+                for (let i = 0; i < advancedWords.length; i++) {
+                    const word = advancedWords[i];
+                    const userAnswer = advancedAnswers[i] || '';
+                    const correctAnswer = word.en.toLowerCase();
+                    
+                    if (userAnswer.toLowerCase() === correctAnswer) {
+                        correct++;
+                    } else {
+                        wrong++;
+                        advancedMistakes.push({
+                            index: i,
+                            word: word,
+                            userAnswer: userAnswer || '(فارغ)'
+                        });
+                    }
+                }
+                
+                // تحديث الإحصائيات
+                updateStats(correct, wrong);
+                
+                // عرض النتائج
+                document.getElementById('correctCount').innerHTML = correct;
+                document.getElementById('wrongCount').innerHTML = wrong;
+                let percentage = (correct / advancedWords.length) * 100;
+                document.getElementById('resultBar').style.width = percentage + '%';
+                
+                window.currentMistakes = advancedMistakes;
+                
+                showPage(5);
+            };
+
+            // --------------------------------------------
+            // تحسينات إضافية
+            // --------------------------------------------
+            
+            // إحصائيات متقدمة
+            function showAdvancedStats() {
+                const totalQuizzes = localStorage.getItem('totalQuizzes') || '0';
+                const totalCorrect = localStorage.getItem('totalCorrect') || '0';
+                const totalWrong = localStorage.getItem('totalWrong') || '0';
+                const accuracy = totalCorrect + totalWrong > 0 
+                    ? Math.round((totalCorrect / (totalCorrect + totalWrong)) * 100) 
+                    : 0;
+                
+                const statsDiv = document.createElement('div');
+                statsDiv.style.cssText = 'position:fixed; top:10px; right:10px; background:white; padding:15px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index:10000; direction:ltr;';
+                statsDiv.innerHTML = `
+                    <h4 style="color:#764ba2; margin-bottom:10px;">📊 إحصائياتك</h4>
+                    <p>📝 اختبارات: ${totalQuizzes}</p>
+                    <p>✅ صحيح: ${totalCorrect}</p>
+                    <p>❌ خطأ: ${totalWrong}</p>
+                    <p>🎯 الدقة: ${accuracy}%</p>
+                    <button onclick="this.parentElement.remove()" style="margin-top:10px; padding:5px;">إغلاق</button>
+                `;
+                document.body.appendChild(statsDiv);
+                
+                setTimeout(() => statsDiv.remove(), 5000);
+            }
+
+            // إضافة زر الإحصائيات في القائمة الرئيسية
+            function addStatsButton() {
+                const page2 = document.getElementById('page2');
+                if (page2) {
+                    const statsBtn = document.createElement('button');
+                    statsBtn.innerHTML = '📊 إحصائياتي';
+                    statsBtn.style.cssText = 'margin-top:20px; width:100%; background:#28a745;';
+                    statsBtn.onclick = showAdvancedStats;
+                    
+                    const card = page2.querySelector('.card');
+                    if (card) {
+                        card.appendChild(statsBtn);
+                    }
+                }
+            }
+
+            // تشغيل عند التحميل
+            window.addEventListener('load', function() {
+                setTimeout(addStatsButton, 200);
+                saveAllData();
+                
+                // إضافة اختصارات لوحة المفاتيح
+                document.addEventListener('keydown', function(e) {
+                    // Ctrl + S للحفظ
+                    if (e.ctrlKey && e.key === 's') {
+                        e.preventDefault();
+                        saveAllData();
+                        alert('💾 تم حفظ التقدم');
+                    }
+                    
+                    // Ctrl + H للعرض الرئيسي
+                    if (e.ctrlKey && e.key === 'h') {
+                        e.preventDefault();
+                        showPage(2);
+                    }
+                });
+            });
+
+            // تصدير البيانات
+            function exportData() {
+                const data = {
+                    user: currentUser,
+                    stats: {
+                        totalQuizzes: localStorage.getItem('totalQuizzes'),
+                        totalCorrect: localStorage.getItem('totalCorrect'),
+                        totalWrong: localStorage.getItem('totalWrong')
+                    },
+                    date: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `quiz-data-${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+            }
+
+            // إضافة زر التصدير
+            const exportBtn = document.createElement('button');
+            exportBtn.innerHTML = '📥 تصدير البيانات';
+            exportBtn.style.cssText = 'position:fixed; bottom:10px; right:10px; background:#6c757d; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; z-index:9999;';
+            exportBtn.onclick = exportData;
+            document.body.appendChild(exportBtn);
+
+            // رسالة ترحيبية
+            console.log('%c🎓 موقع التسميع جاهز للاستخدام', 'color: #764ba2; font-size: 20px; font-weight: bold;');
+            console.log('%c📚 الصف الثالث الإعدادي - الترم الثاني 2026', 'color: #667eea; font-size: 16px;');
+            console.log('%c✅ كل الأنظمة شغالة: تقليدي + متقدم + قصة + إحصائيات', 'color: #28a745; font-size: 14px;');
+        </script>
+        <!-- الصفحة التاسعة: القصة التفاعلية الكاملة -->
+<div id="page9" class="page">
+    <header>
+        <h1>📖 Twenty Thousand Leagues Under the Sea</h1>
+        <h2>قصة التفوق - الترم الثاني 2026</h2>
+    </header>
+
+    <div class="card">
+        <!-- اختيار الفصل -->
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 10px; font-weight: bold;">اختر الفصل:</label>
+            <select id="storyFullChapter" style="width: 100%; padding: 12px;" onchange="loadChapterContent()">
+                <option value="1">الفصل الأول: لغز وحش البحر</option>
+                <option value="2">الفصل الثاني: أسرى الكابتن نيمو</option>
+                <option value="3">الفصل الثالث: عجائب الأعماق</option>
+                <option value="4">الفصل الرابع: معارك ومخاطر</option>
+                <option value="5">الفصل الخامس: أسرار الكابتن نيمو</option>
+                <option value="6">الفصل السادس: الهروب إلى الحرية</option>
+            </select>
+        </div>
+
+        <!-- تبويبات القصة -->
+        <div style="display: flex; gap: 5px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">
+            <button class="tab-btn active" onclick="showStoryTab('summary')" id="tab-summary" style="flex: 1; background: #667eea;">📝 ملخص</button>
+            <button class="tab-btn" onclick="showStoryTab('vocab')" id="tab-vocab" style="flex: 1; background: #764ba2;">📚 كلمات</button>
+            <button class="tab-btn" onclick="showStoryTab('quiz')" id="tab-quiz" style="flex: 1; background: #28a745;">❓ اختبار</button>
+            <button class="tab-btn" onclick="showStoryTab('characters')" id="tab-characters" style="flex: 1; background: #ffc107; color: black;">👥 شخصيات</button>
+        </div>
+
+        <!-- محتوى الملخص -->
+        <div id="story-summary" class="story-tab-content active">
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 15px; line-height: 1.8;">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">📖 ملخص الفصل</h3>
+                <div id="summaryText" style="font-size: 16px;">
+                    <!-- هنا هيتولد الملخص تلقائياً -->
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوى الكلمات -->
+        <div id="story-vocab" class="story-tab-content" style="display: none;">
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 15px;">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">📚 كلمات الفصل</h3>
+                <div id="storyVocabGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                    <!-- هنا هتظهر الكلمات -->
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوى الاختبار -->
+        <div id="story-quiz" class="story-tab-content" style="display: none;">
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 15px;">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">❓ اختبر فهمك</h3>
+                <div id="storyQuestions">
+                    <!-- هنا هتظهر الأسئلة -->
+                </div>
+                <button onclick="checkStoryAnswers()" style="margin-top: 20px; width: 100%; background: #28a745;">🔍 تحقق من الإجابات</button>
+                <div id="storyQuizFeedback" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- محتوى الشخصيات -->
+        <div id="story-characters" class="story-tab-content" style="display: none;">
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 15px;">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">👥 شخصيات القصة</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-right: 5px solid #667eea;">
+                        <h4 style="color: #667eea;">البروفيسور بيير أروناكس</h4>
+                        <p>عالم أحياء بحرية فرنسي، راوي القصة</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-right: 5px solid #764ba2;">
+                        <h4 style="color: #764ba2;">الكابتن نيمو</h4>
+                        <p>قائد الغواصة نوتيلوس، رجل غامض</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-right: 5px solid #28a745;">
+                        <h4 style="color: #28a745;">نيد لاند</h4>
+                        <p>صياد حيتان كندي ماهر</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-right: 5px solid #ffc107;">
+                        <h4 style="color: #b58c00;">كونسيل</h4>
+                        <p>خادم أروناكس الوفي</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button onclick="showPage(6)" class="secondary" style="flex: 1;">🔙 رجوع</button>
+            <button onclick="startStoryPractice()" style="flex: 2; background: #28a745;">▶️ بدء التدريب على الفصل</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------
+    // نظام القصة التفاعلي الكامل
+    // --------------------------------------------
+    
+    // بيانات القصة الكاملة
+    const storyChapters = {
+        1: {
+            title: "لغز وحش البحر",
+            summary: "في منتصف القرن التاسع عشر، انتشرت تقارير عن وحش بحري غامض يدمر السفن. انضم البروفيسور آروناكس مع خادمه كونسيل وصياد الحيتان نيد لاند إلى رحلة بحرية على متن سفينة حربية للبحث عن هذا الوحش. بعد أشهر من البحث دون جدوى، ظهر مخلوق متوهج في الليل. هاجم الوحش السفينة بقوة، وقذف آروناكس ورفاقه في البحر. عندما اقتربوا من 'الوحش'، اكتشفوا بدهشة أنه ليس حيواناً بل غواصة من صنع الإنسان اسمها 'نوتيلوس'.",
+            words: [
+                { ar: "وحش", en: "beast" },
+                { ar: "مخلوق", en: "creature" },
+                { ar: "طاقم السفينة", en: "crew" },
+                { ar: "قائد", en: "commander" },
+                { ar: "يمسك", en: "capture" },
+                { ar: "وجود", en: "existence" },
+                { ar: "صياد بالرمح", en: "harpooner" },
+                { ar: "سفينة حربية", en: "warship" },
+                { ar: "رمح", en: "harpoon" },
+                { ar: "رفقاء", en: "companions" }
+            ],
+            questions: [
+                { q: "ماذا اكتشف آروناكس ورفاقه في نهاية الفصل؟", a: "غواصة من صنع الإنسان" },
+                { q: "من هو صياد الحيتان الكندي؟", a: "نيد لاند" },
+                { q: "ما اسم الغواصة؟", a: "نوتيلوس" }
+            ]
+        },
+        2: {
+            title: "أسرى الكابتن نيمو",
+            summary: "بعد إنقاذهم، تم إدخال آروناكس وكونسيل ونيد لاند إلى الغواصة عبر باب حديدي. هناك التقوا بالقائد الغامض كابتن نيمو، رجل قوي الإرادة وعميق المعرفة. شرح نيمو أن غواصته نوتيلوس تعمل بالكهرباء ويمكنها السفر لمسافات طويلة تحت الماء. رحب بهم نيمو بلطف، لكنه أوضح أنهم لا يمكنهم العودة لليابسة أبداً، وسيبقون معه ما داموا أحياء.",
+            words: [
+                { ar: "أسير", en: "captive" },
+                { ar: "سيد", en: "master" },
+                { ar: "قصر عائم", en: "floating palace" },
+                { ar: "قطع أثرية", en: "artifacts" },
+                { ar: "حرية", en: "freedom" },
+                { ar: "لآلئ مذهلة", en: "astounding pearls" },
+                { ar: "قيمة", en: "value" },
+                { ar: "فضول", en: "curiosity" }
+            ],
+            questions: [
+                { q: "من هو قائد النوتيلوس؟", a: "الكابتن نيمو" },
+                { q: "بماذا تعمل غواصة نوتيلوس؟", a: "الكهرباء" },
+                { q: "من خطط للهروب من الغواصة؟", a: "نيد لاند" }
+            ]
+        },
+        3: {
+            title: "عجائب الأعماق",
+            summary: "في الأيام التالية، اكتشف آروناكس عجائب العالم تحت الماء من خلال نوافذ النوتيلوس الكبيرة: شعاب مرجانية متوهجة، أسماك بكل الأشكال، وحطام سفن راقد في القاع. دعاهم نيمو في رحلات غوص ببدلات خاصة. زاروا غابة تحت الماء ومدينة غارقة. آروناكس سجل كل شيء بحماس، كونسيل ساعده، أما نيد لاند فبدأ ينفد صبره ويشتاق للحرية.",
+            words: [
+                { ar: "شعاب مرجانية", en: "coral reefs" },
+                { ar: "حطام سفن", en: "shipwrecks" },
+                { ar: "بدلات غوص", en: "diving suits" },
+                { ar: "قاع البحر", en: "seabed" },
+                { ar: "مدينة غارقة", en: "sunken city" }
+            ],
+            questions: [
+                { q: "ماذا رأى آروناكس من نوافذ النوتيلوس؟", a: "شعاب مرجانية وأسماك وحطام سفن" },
+                { q: "من كان يشعر بالملل ويخطط للهروب؟", a: "نيد لاند" },
+                { q: "ماذا زاروا في رحلة الغوص؟", a: "غابة تحت الماء ومدينة غارقة" }
+            ]
+        },
+        4: {
+            title: "معارك ومخاطر",
+            summary: "واجهت النوتيلوس مخاطر كثيرة: هجوم حبار عملاق قاتل الطاقم بضراوة باستخدام الفؤوس والحراب، وقتل نيد لاند الوحش. كما علقت الغواصة تحت الجليد في القطب الجنوبي وكادوا يموتون من نقص الأكسجين قبل أن يشقوا طريقهم للخروج. وعندما ظهرت سفن حربية، هاجمها نيمو بلا رحمة وأغرقها.",
+            words: [
+                { ar: "معارك", en: "battles" },
+                { ar: "حبار عملاق", en: "giant squid" },
+                { ar: "صراع", en: "struggle" },
+                { ar: "ظهر السفينة", en: "deck" },
+                { ar: "تهديدات", en: "threats" },
+                { ar: "فؤوس", en: "axes" }
+            ],
+            questions: [
+                { q: "من قتل الحبار العملاق؟", a: "نيد لاند" },
+                { q: "أين علقت النوتيلوس تحت الجليد؟", a: "القطب الجنوبي" },
+                { q: "بماذا هاجم الطاقم الحبار؟", a: "الفؤوس والحراب" }
+            ]
+        },
+        5: {
+            title: "أسرار الكابتن نيمو",
+            summary: "أصبح آروناكس مصمماً على معرفة حقيقة نيمو. كان نيمو غنياً ومثقفاً وحزيناً، يهاجم السفن الحربية بلا تردد مدعياً محاربة القسوة. نيد لاند أصر على الهروب، أما آروناكس فتردد بين حبه للعلم والولاء. في مقبرة سفن غارقة، أدرك آروناكس أن نيمو يرى نفسه جزءاً من هذا العالم الميت.",
+            words: [
+                { ar: "مصمم", en: "determined" },
+                { ar: "تردد", en: "hesitation" },
+                { ar: "مقبرة", en: "graveyard" },
+                { ar: "إصرار", en: "determination" },
+                { ar: "يؤكد", en: "confirm" },
+                { ar: "ثروة", en: "wealth" }
+            ],
+            questions: [
+                { q: "ماذا أراد آروناكس معرفته عن نيمو؟", a: "حقيقته وماضيه" },
+                { q: "ماذا رأوا في مقبرة السفن؟", a: "سفناً غارقة" },
+                { q: "من أصر على الهروب؟", a: "نيد لاند" }
+            ]
+        },
+        6: {
+            title: "الهروب إلى الحرية",
+            summary: "عند اقتراب النوتيلوس من سواحل أوروبا، رأى نيد لاند فرصة للهروب. خلال عاصفة شديدة، أنزل الرفاق قارباً صغيراً في البحر وانجرفوا بعيداً. وصلوا إلى الشاطئ وهم مرهقون. كتب آروناكس مغامراتهم، لكنه لم يعرف مصير نيمو والنوتيلوس. القصة تذكرنا أن الفضول البشري قوي لكن العزلة قد تكون ثمناً باهظاً.",
+            words: [
+                { ar: "مركب صغير", en: "craft" },
+                { ar: "مرهق", en: "exhausted" },
+                { ar: "شبه فاقد للوعي", en: "half-conscious" },
+                { ar: "ينجرف", en: "drift" },
+                { ar: "يصطدم", en: "crash" },
+                { ar: "عزلة", en: "isolation" }
+            ],
+            questions: [
+                { q: "كيف هرب الرفاق من النوتيلوس؟", a: "بقارب صغير أثناء عاصفة" },
+                { q: "ماذا كتب آروناكس بعد الهروب؟", a: "مغامراتهم تحت البحر" },
+                { q: "ما مصير النوتيلوس؟", a: "غير معروف" }
+            ]
+        }
+    };
+
+    // تحميل محتوى الفصل
+    function loadChapterContent() {
+        const chapter = document.getElementById('storyFullChapter').value;
+        const data = storyChapters[chapter];
+        
+        // تحديث الملخص
+        document.getElementById('summaryText').innerHTML = data.summary;
+        
+        // تحديث الكلمات
+        const vocabGrid = document.getElementById('storyVocabGrid');
+        vocabGrid.innerHTML = '';
+        data.words.forEach(word => {
+            vocabGrid.innerHTML += `
+                <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 18px; font-weight: bold; color: #764ba2;">${word.ar}</div>
+                    <div style="font-size: 16px; color: #28a745;">${word.en}</div>
+                </div>
+            `;
+        });
+        
+        // تحديث الأسئلة
+        const questionsDiv = document.getElementById('storyQuestions');
+        questionsDiv.innerHTML = '';
+        data.questions.forEach((q, index) => {
+            questionsDiv.innerHTML += `
+                <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px;">
+                    <div style="font-weight: bold; margin-bottom: 10px;">${index+1}. ${q.q}</div>
+                    <input type="text" id="story_q_${index}" style="width: 100%; padding: 10px;" placeholder="اكتب إجابتك...">
+                </div>
+            `;
+        });
+    }
+
+    // إظهار تبويب معين
+    function showStoryTab(tab) {
+        document.querySelectorAll('.story-tab-content').forEach(el => el.style.display = 'none');
+        document.getElementById(`story-${tab}`).style.display = 'block';
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.style.opacity = '0.7');
+        document.getElementById(`tab-${tab}`).style.opacity = '1';
+    }
+
+    // التحقق من إجابات القصة
+    function checkStoryAnswers() {
+        const chapter = document.getElementById('storyFullChapter').value;
+        const data = storyChapters[chapter];
+        let correct = 0;
+        
+        data.questions.forEach((q, index) => {
+            const answer = document.getElementById(`story_q_${index}`)?.value.trim() || '';
+            if (answer.includes(q.a) || q.a.includes(answer)) {
+                correct++;
+            }
+        });
+        
+        const feedback = document.getElementById('storyQuizFeedback');
+        feedback.innerHTML = `✅ أجبت صحيح على ${correct} من ${data.questions.length} أسئلة`;
+        feedback.style.cssText = 'padding: 10px; background: #d4edda; color: #155724; border-radius: 5px; text-align: center;';
+    }
+
+    // بدء التدريب على الفصل
+    function startStoryPractice() {
+        const chapter = document.getElementById('storyFullChapter').value;
+        const data = storyChapters[chapter];
+        
+        // استخدام كلمات الفصل للتدريب
+        currentWords = data.words;
+        currentWordIndex = 0;
+        userAnswers = new Array(currentWords.length).fill('');
+        
+        document.getElementById('quizUnitTitle').innerHTML = `القصة - الفصل ${chapter}`;
+        updateQuizDisplay();
+        showPage(4);
+    }
+
+    // تحميل الفصل الأول افتراضياً
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            if (document.getElementById('storyFullChapter')) {
+                loadChapterContent();
+            }
+        }, 300);
+    });
+</script>
+    </div> <!-- نهاية container -->
+</body>
+</html>
+  
